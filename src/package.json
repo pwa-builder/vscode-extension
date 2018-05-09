@@ -11,9 +11,7 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.imageGenerator",
-        "onCommand:extension.appxPackage",
-        "onCommand:extension.executeProject"
+        "onCommand:extension.imageGenerator"
     ],
     "main": "./out/extension",
     "contributes": {
@@ -21,24 +19,6 @@
             {
                 "command": "extension.imageGenerator",
                 "title": "App Image Generator"
-            },
-            {
-                "command": "extension.appxPackage",
-                "title": "Appx Packaging"
-            },
-            {
-                "command": "extension.executeProject",
-                "title": "Execute Project"
-            }
-        ],
-        "snippets": [
-            {
-                "language": "json",
-                "path": "./snippets/json.json"
-            },
-            {
-                "language": "javascript",
-                "path": "./snippets/javascript.json"
             }
         ]
     },
@@ -50,17 +30,14 @@
         "test": "npm run compile && node ./node_modules/vscode/bin/test"
     },
     "devDependencies": {
-        "@types/mocha": "^2.2.42",
-        "@types/node": "^7.0.63",
-        "typescript": "^2.8.3",
-        "vscode": "^1.1.17"
+        "typescript": "^2.6.1",
+        "vscode": "^1.1.6",
+        "@types/node": "^7.0.43",
+        "@types/mocha": "^2.2.42"
     },
     "dependencies": {
-        "adm-zip": "^0.4.9",
-        "cloudappx-server": "0.0.6",
-        "filehound": "^1.16.3",
+        "adm-zip": "^0.4.7",
         "form-data": "^2.3.2",
-        "hwa": "0.0.7",
         "request": "^2.85.0"
     }
 }

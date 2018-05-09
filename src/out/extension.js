@@ -3,124 +3,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require("vscode");
-const Q = require('q');
-const exec = require('child_process').exec;
-const execute = Q.nfbind(exec);
-// Internal Modules
-const { commandLine } = require('../modules/appxPackage');
+// External Lib
 const request = require("request");
 const FormData = require("form-data");
 const http = require("http");
 const fs = require("fs");
-const hwa = require("hwa");
-const { makeAppx } = require('cloudappx-server');
 const path = require("path");
 const AdmZip = require('adm-zip');
-const Filehound = require('filehound');
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 function activate(context) {
     console.log('Congratulations, your extension "PWA-Builder" is now active!');
-    let executeProject = vscode.commands.registerCommand('extension.executeProject', () => {
-        console.log("executeProject");
-        try {
-            // The manifest must be a xml file.
-            vscode.window.showOpenDialog({
-                canSelectFiles: true,
-                canSelectFolders: false,
-                canSelectMany: false,
-                openLabel: "Select manifest",
-            })
-                .then(function (result) {
-                hwa.registerApp(path.resolve(result[0].fsPath))
-                    .catch(function (error) { if (error) {
-                    throw error;
-                } });
-                vscode.window.showInformationMessage("Opening the proyect...");
-            });
-        }
-        catch (error) {
-            vscode.window.showErrorMessage(error);
-        }
-        ;
-    });
-    let appxPackage = vscode.commands.registerCommand('extension.appxPackage', () => {
-        console.log("appxPackage");
-        try {
-            let xmlPath;
-            let filesFound;
-            let manifestPath;
-            let manifestJson;
-            // Manifest file picker
-            vscode.window.showOpenDialog({
-                canSelectFiles: true,
-                canSelectFolders: false,
-                canSelectMany: false,
-                openLabel: "Select manifest.json",
-            })
-                .then(function (result) {
-                manifestPath = result[0].fsPath;
-                manifestJson = JSON.parse(fs.readFileSync(result[0].fsPath, function (err, data) { if (err) {
-                    throw err;
-                } }));
-                // Output folder picker where the app will be generated
-                vscode.window.showOpenDialog({
-                    canSelectFiles: false,
-                    canSelectFolders: true,
-                    canSelectMany: false,
-                    openLabel: "Select folder",
-                })
-                    .then(function (result) {
-                    xmlPath = result[0].fsPath;
-                    // The data required by the MakeAppx is added manually
-                    manifestJson.out = xmlPath;
-                    manifestJson.dir = xmlPath;
-                    vscode.window.showQuickPick(["Windows10", "Mac"], { canPickMany: false })
-                        .then(function (result) {
-                        if (result != '') {
-                            commandLine(manifestPath, manifestJson, xmlPath, result.toLowerCase())
-                                .then(function () {
-                                Filehound.create()
-                                    .match('appxmanifest.xml')
-                                    .paths(xmlPath)
-                                    .find((err, htmlFiles) => {
-                                    if (err)
-                                        throw err;
-                                    filesFound = htmlFiles;
-                                }).then(function () {
-                                    fs.rename(filesFound[0], xmlPath + "\\appxmanifest.xml");
-                                    makeAppx(manifestJson)
-                                        .then(function (res) {
-                                        vscode.window.showInformationMessage("Appx packaging complete.");
-                                    })
-                                        .catch(function (err) {
-                                        vscode.window.showInformationMessage("Appx packaging error: " + err);
-                                    });
-                                })
-                                    .catch(function (err) {
-                                    vscode.window.showInformationMessage("Finding appxmanifest error: " + err);
-                                });
-                            })
-                                .catch(function (cat) {
-                                if (cat) {
-                                    console.log("commandline error", cat);
-                                    throw cat;
-                                }
-                            });
-                        }
-                        else {
-                            vscode.window.showErrorMessage("No platform was chosen.");
-                        }
-                    });
-                });
-            });
-        }
-        catch (error) {
-            vscode.window.showInformationMessage(error);
-        }
-    });
     let inputBox = vscode.commands.registerCommand('extension.imageGenerator', () => {
-        const apiUrl = 'http://localhost:49080/';
+        const apiUrl = 'http://appimagegenerator-pre.azurewebsites.net/'; // 'http://localhost:49080/'; 
         let extractPath = '';
         let manifestFilePath = '';
         const tmpFolder = process.env.LOCALAPPDATA;
@@ -172,6 +67,7 @@ function activate(context) {
                             }
                         });
                     };
+                    // Image Background
                     let inputColorOption = function () {
                         vscode.window.showQuickPick(["Transparent", "Custom Color"], { canPickMany: false })
                             .then(function (result) {
@@ -203,6 +99,7 @@ function activate(context) {
                             }
                         });
                     };
+                    // Select of extraction path
                     let setExtractPath = function () {
                         vscode.window.showOpenDialog({
                             canSelectFiles: false,
@@ -214,15 +111,14 @@ function activate(context) {
                             extractPath = result[0].path.substring(1);
                             let folderName = extractPath.split('/').pop();
                             if (folderName.toLowerCase() == 'assets') {
-                                console.log(folderName.toLowerCase());
                                 setManifestPath();
                             }
                             else {
-                                console.log(folderName.toLowerCase());
                                 vscode.window.showErrorMessage("Wrong folder name. It must be the Assets folder.");
                             }
                         });
                     };
+                    // Select of manifest path
                     let setManifestPath = function () {
                         vscode.window.showOpenDialog({
                             canSelectFiles: true,

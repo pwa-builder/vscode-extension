@@ -11,7 +11,8 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.imageGenerator"
+        "onCommand:extension.imageGenerator",
+        "onCommand:extension.appxPackage"
     ],
     "main": "./out/extension",
     "contributes": {
@@ -19,6 +20,10 @@
             {
                 "command": "extension.imageGenerator",
                 "title": "App Image Generator"
+            },
+            {
+                "command": "extension.appxPackage",
+                "title": "Appx Packaging"
             }
         ]
     },
@@ -37,6 +42,8 @@
     },
     "dependencies": {
         "adm-zip": "^0.4.7",
+        "cloudappx-server": "0.0.6",
+        "filehound": "^1.16.3",
         "form-data": "^2.3.2",
         "request": "^2.85.0"
     }

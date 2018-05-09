@@ -3,17 +3,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require("vscode");
-// External Lib
+// Node Lib
 const request = require("request");
-const FormData = require("form-data");
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
+// Image Generator Lib
 const AdmZip = require('adm-zip');
+const FormData = require("form-data");
+// Appx Packaging Lib
+const Filehound = require('filehound');
+const { makeAppx } = require('cloudappx-server');
+// Command Line
+const Q = require('q');
+const exec = require('child_process').exec;
+const execute = Q.nfbind(exec);
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 function activate(context) {
     console.log('Congratulations, your extension "PWA-Builder" is now active!');
+    // ------------  IMAGE GENERATOR ---------------------------
     let inputBox = vscode.commands.registerCommand('extension.imageGenerator', () => {
         const apiUrl = 'http://appimagegenerator-pre.azurewebsites.net/'; // 'http://localhost:49080/'; 
         let extractPath = '';
@@ -181,6 +190,76 @@ function activate(context) {
                 vscode.window.showInformationMessage("No image selected");
             }
         });
+    });
+    // -------------------- END IMAGE GENERATOR -------------------------------------
+    // ------------------------- APPX PACKAGE ------------------------------------
+    let appxPackage = vscode.commands.registerCommand('extension.appxPackage', () => {
+        console.log("appxPackage");
+        try {
+            let xmlPath;
+            let filesFound;
+            let manifestPath;
+            let manifestJson;
+            // Manifest file picker
+            vscode.window.showOpenDialog({
+                canSelectFiles: true,
+                canSelectFolders: false,
+                canSelectMany: false,
+                openLabel: "Select manifest.json",
+            })
+                .then(function (result) {
+                manifestPath = result[0].fsPath;
+                manifestJson = JSON.parse(fs.readFileSync(result[0].fsPath, function (err, data) { if (err) {
+                    throw err;
+                } }));
+                // Output folder picker where the app will be generated
+                vscode.window.showOpenDialog({
+                    canSelectFiles: false,
+                    canSelectFolders: true,
+                    canSelectMany: false,
+                    openLabel: "Select destination folder",
+                })
+                    .then(function (result) {
+                    xmlPath = result[0].fsPath;
+                    // The data required by the MakeAppx is added manually
+                    manifestJson.out = xmlPath;
+                    manifestJson.dir = xmlPath;
+                    vscode.window.showInformationMessage("Generating package. Please wait.");
+                    let cmdline = "pwabuilder -m " + manifestPath + " -p windows10 -d " + xmlPath;
+                    execute(cmdline)
+                        .then(function () {
+                        Filehound.create()
+                            .match('appxmanifest.xml')
+                            .paths(xmlPath)
+                            .find((err, htmlFiles) => {
+                            if (err)
+                                throw err;
+                            filesFound = htmlFiles;
+                        }).then(function () {
+                            fs.rename(filesFound[0], xmlPath + "\\appxmanifest.xml");
+                            makeAppx(manifestJson)
+                                .then(function (res) {
+                                vscode.window.showInformationMessage("Appx packaging complete.");
+                            })
+                                .catch(function (err) {
+                                vscode.window.showInformationMessage("Appx packaging error: " + err);
+                            });
+                        })
+                            .catch(function (err) {
+                            vscode.window.showInformationMessage("Finding appxmanifest error: " + err);
+                        });
+                    })
+                        .catch(function (cat) {
+                        if (cat) {
+                            throw cat;
+                        }
+                    });
+                });
+            });
+        }
+        catch (error) {
+            vscode.window.showInformationMessage(error);
+        }
     });
 }
 exports.activate = activate;

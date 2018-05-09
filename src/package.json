@@ -30,6 +30,12 @@
                 "command": "extension.executeProject",
                 "title": "Execute Project"
             }
+        ],
+        "snippets": [
+            {
+                "language": "json",
+                "path": "./snippets/json.json"
+            }
         ]
     },
     "scripts": {

@@ -23,6 +23,10 @@ const Q = require('q');
 const exec = require('child_process').exec;
 const execute = Q.nfbind(exec);
 
+// Execute project
+
+const hwa = require('hwa');
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -334,6 +338,43 @@ let appxPackage = vscode.commands.registerCommand('extension.appxPackage', () =>
     
 });
 
+// -------------------- END APPX PACKAGE ----------------------------
+
+// --------------------- EXECUTE PROJECT ---------------------------
+
+let executeProject = vscode.commands.registerCommand('extension.executeProject', () => {
+    console.log("executeProject")
+    try {
+        // The manifest must be a xml file.
+
+        vscode.window.showOpenDialog({
+            canSelectFiles: true,
+            canSelectFolders: false,
+            canSelectMany: false,
+            openLabel: "Select manifest.xml",
+
+        })
+        .then(function(result:any){
+            try {
+                hwa.registerApp(path.resolve(result[0].fsPath))
+                .catch(function(error:any){if(error){throw error}})
+                vscode.window.showInformationMessage("Opening the proyect...")
+                
+            } catch (error) {
+
+                vscode.window.showErrorMessage("The file must be XML")
+            }
+                
+        })
+
+
+    } catch (error) {
+        vscode.window.showErrorMessage(error)
+    };
+
+});
+
+// -------------------- END EXECUTE PROJECT -------------------------
 }
 
 // this method is called when your extension is deactivated

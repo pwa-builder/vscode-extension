@@ -18,6 +18,8 @@ const { makeAppx } = require('cloudappx-server');
 const Q = require('q');
 const exec = require('child_process').exec;
 const execute = Q.nfbind(exec);
+// Execute project
+const hwa = require('hwa');
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 function activate(context) {
@@ -261,6 +263,37 @@ function activate(context) {
             vscode.window.showInformationMessage(error);
         }
     });
+    // -------------------- END APPX PACKAGE ----------------------------
+    // --------------------- EXECUTE PROJECT ---------------------------
+    let executeProject = vscode.commands.registerCommand('extension.executeProject', () => {
+        console.log("executeProject");
+        try {
+            // The manifest must be a xml file.
+            vscode.window.showOpenDialog({
+                canSelectFiles: true,
+                canSelectFolders: false,
+                canSelectMany: false,
+                openLabel: "Select manifest.xml",
+            })
+                .then(function (result) {
+                try {
+                    hwa.registerApp(path.resolve(result[0].fsPath))
+                        .catch(function (error) { if (error) {
+                        throw error;
+                    } });
+                    vscode.window.showInformationMessage("Opening the proyect...");
+                }
+                catch (error) {
+                    vscode.window.showErrorMessage("The file must be XML");
+                }
+            });
+        }
+        catch (error) {
+            vscode.window.showErrorMessage(error);
+        }
+        ;
+    });
+    // -------------------- END EXECUTE PROJECT -------------------------
 }
 exports.activate = activate;
 // this method is called when your extension is deactivated

@@ -12,7 +12,8 @@
     ],
     "activationEvents": [
         "onCommand:extension.imageGenerator",
-        "onCommand:extension.appxPackage"
+        "onCommand:extension.appxPackage",
+        "onCommand:extension.executeProject"
     ],
     "main": "./out/extension",
     "contributes": {
@@ -24,6 +25,10 @@
             {
                 "command": "extension.appxPackage",
                 "title": "Appx Packaging"
+            },
+            {
+                "command": "extension.executeProject",
+                "title": "Execute Project"
             }
         ]
     },

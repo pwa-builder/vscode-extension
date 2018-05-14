@@ -31,12 +31,12 @@ const hwa = require('hwa');
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "PWA-Builder" is now active!');
- 
+
     // ------------  IMAGE GENERATOR ---------------------------
 
     let inputBox = vscode.commands.registerCommand('extension.imageGenerator', () => {
-        
-        const apiUrl = 'http://appimagegenerator-pre.azurewebsites.net/'; // 'http://localhost:49080/'; 
+
+        const apiUrl = 'http://appimagegenerator-pre.azurewebsites.net/'; // 'http://localhost:49080/';
 
         let extractPath = '';
         let manifestFilePath = '';
@@ -52,18 +52,18 @@ export function activate(context: vscode.ExtensionContext) {
             }
         })
         .then(function(result:any){
-            
+
             let imgUrl = result[0].fsPath;
-           
-            
+
+
             if(imgUrl != ''){
-                
+
                 try {
-                    
+
                     const formData = new FormData()
-                    
+
                     formData.append('fileName',fs.createReadStream(imgUrl));
-                    
+
                     // Platforms input
 
                         vscode.window.showQuickPick(["iOS","Windows","Windows10","Android", "Chrome", "Firefox"],{canPickMany: true})
@@ -73,36 +73,36 @@ export function activate(context: vscode.ExtensionContext) {
                                 for (let i = 0; i < result.length; i++) {
                                     formData.append('platform', (result[i]).toLowerCase());
                                 }
-                                
+
                                 inputPadding();
                             }else{
                                 vscode.window.showErrorMessage("No platform was chosen.")
                             }
                         });
-                    
-                    
-                        
+
+
+
                     // Padding input
                     let inputPadding = function(){
 
                         vscode.window.showInputBox({prompt: '0 is no padding, 1 is 100% of the source image. 0.3 is a typical value for most icons', placeHolder: '0.3'})
                         .then(function(resultPadding){
                             let predetPadding = '0.3';
-                            
+
                             if(resultPadding != undefined && resultPadding != null && resultPadding != ''){
                                 if(parseFloat(resultPadding) < 0 || parseFloat(resultPadding) > 0){
                                     vscode.window.showErrorMessage("Incorrect padding value. It must be between 0 and 1.")
                                 }else{
-                                    formData.append('padding', resultPadding); 
+                                    formData.append('padding', resultPadding);
                                     inputColorOption();
-                                    
+
                                 }
                             }else{
-                                formData.append('padding', predetPadding); 
+                                formData.append('padding', predetPadding);
                                 inputColorOption();
-                                
+
                             }
-                            
+
                         })
                     };
                     // Image Background
@@ -112,27 +112,27 @@ export function activate(context: vscode.ExtensionContext) {
                             let color = '';
                             let colorOption = '0';
                             let colorChanged = '0';
-                            
+
                             if(result == "Custom Color"){
 
                                 vscode.window.showInputBox({prompt: 'Insert the hexadecimal code. Ex: #123456'})
                                 .then(function(resultColor:any){
-                                
+
                                     if(resultColor.substring(0,1) == '#' && resultColor.length == 7){
 
                                         color = resultColor;
                                         colorOption = '1';
-                                        colorChanged = '1'; 
-                                        
+                                        colorChanged = '1';
+
                                         formData.append('colorOption', colorOption);
                                         formData.append('colorChanged', colorChanged);
                                         formData.append('color', color);
-                                        
+
                                         setExtractPath();
                                     } else {
                                         vscode.window.showErrorMessage("Invalid value, it must be like #123456.")
                                     }
-                                    
+
                                 })
                             }else{
 
@@ -140,13 +140,13 @@ export function activate(context: vscode.ExtensionContext) {
                                 formData.append('colorChanged', colorChanged);
                                 formData.append('color', color);
                                 setExtractPath();
-                                
+
                             }
                     })
                     };
-                  
+
                     // Select of extraction path
-                
+
                     let setExtractPath = function(){
                         vscode.window.showOpenDialog({
                             canSelectFiles: false,
@@ -156,7 +156,7 @@ export function activate(context: vscode.ExtensionContext) {
 
                         })
                         .then(function(result:any){
-                            
+
                             extractPath = result[0].path.substring(1);
                             let folderName:any = extractPath.split('/').pop();
                             if (folderName.toLowerCase() == 'assets') {
@@ -164,8 +164,8 @@ export function activate(context: vscode.ExtensionContext) {
                             }else{
                                 vscode.window.showErrorMessage("Wrong folder name. It must be the Assets folder.")
                             }
-                            
-                            
+
+
                         })
                     }
                     // Select of manifest path
@@ -181,7 +181,7 @@ export function activate(context: vscode.ExtensionContext) {
                             manifestFilePath = result[0].path.substring(1);
                             let fileNameManifest:any = manifestFilePath.split('/').pop(); //FileName with extension
                             let extensionFile = fileNameManifest.split('.').pop(); // Extension
-                            
+
                             if(extensionFile.toLowerCase() == 'json'){
                                 sendToApi();
                             } else {
@@ -189,37 +189,36 @@ export function activate(context: vscode.ExtensionContext) {
                             }
                         })
                     }
-                    
-                    
+
+
                         let sendToApi = function(){
 
                         request.post(apiUrl + 'api/image/',{
                             body: formData,
                             headers: formData.getHeaders()
-                            
+
                         },function(err:any,res:any){
-                            
+
                             const resultZipUri = JSON.parse(res.body).Uri;
 
                             try{
-                                
+
                                 let newFileName = 'AppImages';
                                 var tmpFilePath = tmpFolder + "/" + newFileName + ".zip";
-                                
+
                                 http.get(apiUrl + resultZipUri.substring(1), function(response:any){
                                     response.on('data', function(data:any){
-                                            console.log("api data",data);
+
                                             fs.appendFileSync(tmpFilePath,data)
 
                                     });
                                     response.on('end', function(){
                                         var zip = new AdmZip(tmpFilePath)
-                                        
-                                        zip.extractAllTo(extractPath)
+
+                                        zip.extractAllTo(extractPath, true)
                                         fs.unlink(tmpFilePath)
-                                         
                                         let jsonManifest = JSON.parse(fs.readFileSync(manifestFilePath, function(err:any, data:any){if(err){throw err;}}))
-                                        
+
                                         let jsonIcons = JSON.parse(fs.readFileSync(extractPath + '/icons.json',function(err:any, data:any){if(err){throw err;}}))
 
                                     jsonManifest.icons = jsonIcons.icons;
@@ -233,23 +232,23 @@ export function activate(context: vscode.ExtensionContext) {
                                 });
 
                             }
-                        
+
                             catch(err){
                                 vscode.window.showInformationMessage("Error on Zip Request: " + err)
                             }
                         });
                     };
-                    
+
                 } catch (error) {
                     vscode.window.showInformationMessage('Error: ' + error)
                 }
             }else{
                 vscode.window.showInformationMessage("No image selected")
             }
-            
+
         })
-        
-    
+
+
     });
 // -------------------- END IMAGE GENERATOR -------------------------------------
 
@@ -257,7 +256,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 let appxPackage = vscode.commands.registerCommand('extension.appxPackage', () => {
     console.log("appxPackage")
-    
+
     try {
         let xmlPath:any;
         let filesFound:any;
@@ -290,12 +289,12 @@ let appxPackage = vscode.commands.registerCommand('extension.appxPackage', () =>
                 // The data required by the MakeAppx is added manually
                 manifestJson.out = xmlPath;
                 manifestJson.dir = xmlPath;
-                vscode.window.showInformationMessage("Generating package. Please wait.")   
+                vscode.window.showInformationMessage("Generating package. Please wait.")
                 let cmdline = "pwabuilder -m " + manifestPath + " -p windows10 -d " + xmlPath
                 execute(cmdline)
                 .then(
                     function () {
-                                    
+
                         Filehound.create()
                             .match('appxmanifest.xml')
                             .paths(xmlPath)
@@ -305,17 +304,17 @@ let appxPackage = vscode.commands.registerCommand('extension.appxPackage', () =>
                             }).then(
                                 function () {
                                     fs.rename(filesFound[0], xmlPath + "\\appxmanifest.xml")
-                                    
+
                                         makeAppx(manifestJson)
                                         .then(function (res:any) {
                                             vscode.window.showInformationMessage("Appx packaging complete.")
-                                        
+
                                         })
                                         .catch(function (err:any) {
                                             vscode.window.showInformationMessage("Appx packaging error: " + err)
                                         })
-                                        
-                                    
+
+
                                 }
                             )
                             .catch(function (err:any) {
@@ -328,14 +327,14 @@ let appxPackage = vscode.commands.registerCommand('extension.appxPackage', () =>
                         throw cat
                     }
                 });
-                    
+
             })
         })
     } catch (error) {
         vscode.window.showInformationMessage(error)
     }
-    
-    
+
+
 });
 
 // -------------------- END APPX PACKAGE ----------------------------
@@ -359,12 +358,12 @@ let executeProject = vscode.commands.registerCommand('extension.executeProject',
                 hwa.registerApp(path.resolve(result[0].fsPath))
                 .catch(function(error:any){if(error){throw error}})
                 vscode.window.showInformationMessage("Opening the proyect...")
-                
+
             } catch (error) {
 
                 vscode.window.showErrorMessage("The file must be XML")
             }
-                
+
         })
 
 
@@ -379,4 +378,4 @@ let executeProject = vscode.commands.registerCommand('extension.executeProject',
 
 // this method is called when your extension is deactivated
 export function deactivate() {
-} 
+}

@@ -8,6 +8,7 @@ const request = require("request");
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
+const os = require("os");
 
 // Image Generator Lib
 const AdmZip = require('adm-zip');
@@ -23,9 +24,6 @@ const Q = require('q');
 const exec = require('child_process').exec;
 const execute = Q.nfbind(exec);
 
-// Execute project
-
-const hwa = require('hwa');
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -355,9 +353,39 @@ let executeProject = vscode.commands.registerCommand('extension.executeProject',
         })
         .then(function(result:any){
             try {
-                hwa.registerApp(path.resolve(result[0].fsPath))
-                .catch(function(error:any){if(error){throw error}})
-                vscode.window.showInformationMessage("Opening the proyect...")
+                let commandLine:any=null;
+                if(os.platform != 'darwin'){
+                    console.log("Windows")
+                    commandLine = 'start ' + result[0].fsPath
+
+                }else {
+                    console.log("MacOS")
+                    
+                    let appFile = result[0].fsPath.split('/').pop()
+                    let path = result[0].fsPath.replace(appFile,'')
+        
+                    let fileNoExt = appFile.split('.');
+        
+                    Filehound.create()
+                    .glob(fileNoExt[0])
+                    .paths(path)
+                        .find((err:any, htmlFiles:any) => {
+                            if (err) throw err;
+                            commandLine = "open -F " + htmlFiles[0]
+                        })
+                        .catch(function (err:any) {
+                            vscode.window.showInformationMessage("Finding appxmanifest error: " + err)
+                        });
+        
+        
+                }
+
+               // hwa.registerApp(path.resolve(result[0].fsPath))
+               // .catch(function(error:any){if(error){throw error}})
+               vscode.window.showInformationMessage("Opening the proyect...")
+               exec(commandLine)
+               .then(function(res:any){console.log("Open")})
+               .catch(function(cat:any){console.log("Error: ", cat)})
 
             } catch (error) {
 

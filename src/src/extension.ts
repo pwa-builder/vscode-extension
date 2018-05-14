@@ -208,7 +208,7 @@ export function activate(context: vscode.ExtensionContext) {
                                 
                                 http.get(apiUrl + resultZipUri.substring(1), function(response:any){
                                     response.on('data', function(data:any){
-                                            
+                                            console.log("api data",data);
                                             fs.appendFileSync(tmpFilePath,data)
 
                                     });
@@ -217,7 +217,7 @@ export function activate(context: vscode.ExtensionContext) {
                                         
                                         zip.extractAllTo(extractPath)
                                         fs.unlink(tmpFilePath)
-                                        
+                                         
                                         let jsonManifest = JSON.parse(fs.readFileSync(manifestFilePath, function(err:any, data:any){if(err){throw err;}}))
                                         
                                         let jsonIcons = JSON.parse(fs.readFileSync(extractPath + '/icons.json',function(err:any, data:any){if(err){throw err;}}))

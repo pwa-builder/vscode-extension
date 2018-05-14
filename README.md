@@ -12,11 +12,10 @@ You will need the following things properly installed on your computer.
 
 ## Dependecies
 
-* Vue.js
-* CloudAppx
-* HWA
-* Filehound
-* PWA-Builder
+* [CloudAppx-Server](https://www.npmjs.com/package/cloudappx-server)
+* [HWA](https://www.npmjs.com/package/hwa)
+* [Filehound](https://www.npmjs.com/package/filehound)
+* [PWA-Builder](https://www.npmjs.com/package/pwabuilder-windows10) (Windows 10)
 
 ## Installation
 
@@ -30,28 +29,29 @@ You will need the following things properly installed on your computer.
 | ----------------- | --------------- |
 | `Appx Package`     | This command generates the Appx package |
 | `Execute Package`     | Execute a app from manifest.xml file |
-| `Image Generator`     | Generates the images that you need for manifest.   |
+| <a href="README.md#imggen">Image Generator</a>    | Generates the images that you need for manifest.   |
 
 ## Commands Guide
 ### Appx Packaging
 Select manifest.json <br>
 ![Picture](Readme-Files/AppxPackaging-Images/AppxPackaging-Step1.PNG)
 
-Select output folder <br>
+Select the output folder in which you want the package will be saved. <br>
 ![Picture](Readme-Files/AppxPackaging-Images/AppxPackaging-Step2.PNG)
 
-Select platform where the package will be install <br>
+Select the platform where the package will be installed <br>
 ![Picture](Readme-Files/AppxPackaging-Images/AppxPackaging-Step3.PNG)
 
-Wait a moment and when the package it is ready a information message will show up <br>
+Wait a moment, take a cup of coffee and an information message will show up when the package be ready <br>
 ![Picture](Readme-Files/AppxPackaging-Images/AppxPackaging-Step4.PNG)
 
-And if we open the chosen output folder we can see the followings files: site folder, appx manifest file and the site package. <br>
+When all be done, open the folder that you choose before and you will see the following files: __Test__ (site's folder), __appxmanifest.xml__ and __Test.appx__ (site's package). <br>
+The directory and package names will be the same of the manifest's short name property, file that we selected at the beggining of the process.
 
 ![Picture](Readme-Files/AppxPackaging-Images/AppxPackaging-FilesResult.PNG)
 
-* __Site Folder__: This folder contains the PWA-Builder result files.
-* __Appx Manifest__: This file is a XML file that has been created by the PWA-Builder package and it's needed for the Appx Packaging.
+* __Site Folder__: This folder contains all the files that was created by the PWA-Builder.
+* __Appx Manifest__: This file is a XML file that has been created by the PWA-Builder package and it's needed for the packaging process.
 * __Site Package__: If we double click it, this gonna open the site as Windows App.
 
 ### Execute Project
@@ -60,24 +60,26 @@ Select the manifest file that you want execute (It must be a XML file). <br>
 ![Picture](Readme-Files/ExecuteProject-Images/ExecuteProject-Step1.PNG)
 
 ### Image Generator
-
-Select image <br>
+<a id="imggen"></a>
+Select the image that you want for the site's icon. <br>
 ![Picture](Readme-Files/ImageGenerator-Images/ImageGenerator-Step1.PNG)
 
-Select platforms <br>
+Select the platforms <br>
 ![Picture](Readme-Files/ImageGenerator-Images/ImageGenerator-Step2.PNG)
 
-input padding <br>
+Insert the padding value that you want for the image. <br>
 ![Picture](Readme-Files/ImageGenerator-Images/ImageGenerator-Step3.png)
 
-select between transparent or color image background, ifcolor set the hex value <br>
+Select whether the background will be transparent or a color which must be entered as a hexadecimal code in the following step.  <br>
 ![Picture](Readme-Files/ImageGenerator-Images/ImageGenerator-Step4.png)
 
-Select assets folder <br>
 ![Picture](Readme-Files/ImageGenerator-Images/ImageGenerator-Step5.png)
 
-Select manifest.json <br>
+Select __assets__ folder <br>
 ![Picture](Readme-Files/ImageGenerator-Images/ImageGenerator-Step6.png)
+
+Select the __manifest.json__ <br>
+![Picture](Readme-Files/ImageGenerator-Images/ImageGenerator-Step7.png)
 
 #### Before command execute 
 Assets Folder <br>

@@ -8,7 +8,6 @@ You will need the following things properly installed on your computer.
 
 * [Git](http://git-scm.com/)
 * [Node.js](http://nodejs.org/) (with NPM)
-* [NPM](http://npmjs.com/)
 
 ## Dependecies
 
@@ -27,11 +26,13 @@ You will need the following things properly installed on your computer.
 
 |  **&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Command&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;** | **Description** |
 | ----------------- | --------------- |
-| `Appx Package`     | This command generates the Appx package |
-| `Execute Package`     | Execute a app from manifest.xml file |
+| <a href="README.md#appxpackage">Appx Package</a>       | This command generates the Appx package |
+| <a href="README.md#exepackage">Execute Package</a>    | Execute a app from manifest.xml file |
 | <a href="README.md#imggen">Image Generator</a>    | Generates the images that you need for manifest.   |
 
 ## Commands Guide
+<div id="appxpackage"></div>
+
 ### Appx Packaging
 Select manifest.json <br>
 ![Picture](Readme-Files/AppxPackaging-Images/AppxPackaging-Step1.PNG)
@@ -53,14 +54,19 @@ The directory and package names will be the same of the manifest's short name pr
 * __Site Folder__: This folder contains all the files that was created by the PWA-Builder.
 * __Appx Manifest__: This file is a XML file that has been created by the PWA-Builder package and it's needed for the packaging process.
 * __Site Package__: If we double click it, this gonna open the site as Windows App.
+<div id="exepackage"></div>
+
 
 ### Execute Project
 
 Select the manifest file that you want execute (It must be a XML file). <br>
 ![Picture](Readme-Files/ExecuteProject-Images/ExecuteProject-Step1.PNG)
 
+<div id="imggen"></div>
+
+
 ### Image Generator
-<a id="imggen"></a>
+
 Select the image that you want for the site's icon. <br>
 ![Picture](Readme-Files/ImageGenerator-Images/ImageGenerator-Step1.PNG)
 

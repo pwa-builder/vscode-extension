@@ -59,8 +59,11 @@ The directory and package names will be the same of the manifest's short name pr
 Select the manifest file that you want execute (It must be a XML file). <br>
 ![Picture](Readme-Files/ExecuteProject-Images/ExecuteProject-Step1.PNG)
 
+<div id="imggen"></div>
+
+
 ### Image Generator
-<a id="imggen"></a>
+
 Select the image that you want for the site's icon. <br>
 ![Picture](Readme-Files/ImageGenerator-Images/ImageGenerator-Step1.PNG)
 

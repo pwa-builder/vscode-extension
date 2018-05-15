@@ -354,12 +354,14 @@ export function activate(context: vscode.ExtensionContext) {
                 .then(function (result: any) {
                     console.log("OS: ", os.platform())
                     console.log("file path: ", result[0].fsPath)
-                    
+
                     let commandLine: any = null;
                     if (os.platform() == 'win32') {
                         console.log("Windows")
 
                         commandLine = 'start ' + result[0].fsPath
+
+                        executeCommandLine(commandLine);
 
                     } else if (os.platform() == 'darwin')  {
                         console.log("MacOS")
@@ -373,8 +375,12 @@ export function activate(context: vscode.ExtensionContext) {
                             .glob(fileNoExt[0])
                             .paths(path)
                             .find((err: any, htmlFiles: any) => {
+                                console.log("filesFound: ", htmlFiles)
                                 if (err) throw err;
                                 commandLine = "open -F " + htmlFiles[0]
+                                console.log("Commnandline MacOS: ", commandLine)
+                                executeCommandLine(commandLine);
+
                             })
                             .catch(function (err: any) {
                                 vscode.window.showInformationMessage("Finding appxmanifest error: " + err)
@@ -384,11 +390,14 @@ export function activate(context: vscode.ExtensionContext) {
                     }
                     vscode.window.showInformationMessage("Opening the proyect...")
                     console.log("CommandLine: ",commandLine)
-                    exec(commandLine)
+                    function executeCommandLine(commandLine:any){
+
+                        exec(commandLine)
                         .then(function (res: any) { console.log("Open") })
                         .catch(function (cat: any) { console.log("Error: ", cat) })
+                    }
 
-                   
+
 
                 })
 

@@ -281,6 +281,7 @@ function activate(context) {
                 if (os.platform() == 'win32') {
                     console.log("Windows");
                     commandLine = 'start ' + result[0].fsPath;
+                    executeCommandLine(commandLine);
                 }
                 else if (os.platform() == 'darwin') {
                     console.log("MacOS");
@@ -291,9 +292,12 @@ function activate(context) {
                         .glob(fileNoExt[0])
                         .paths(path)
                         .find((err, htmlFiles) => {
+                        console.log("filesFound: ", htmlFiles);
                         if (err)
                             throw err;
                         commandLine = "open -F " + htmlFiles[0];
+                        console.log("Commnandline MacOS: ", commandLine);
+                        executeCommandLine(commandLine);
                     })
                         .catch(function (err) {
                         vscode.window.showInformationMessage("Finding appxmanifest error: " + err);
@@ -301,9 +305,11 @@ function activate(context) {
                 }
                 vscode.window.showInformationMessage("Opening the proyect...");
                 console.log("CommandLine: ", commandLine);
-                exec(commandLine)
-                    .then(function (res) { console.log("Open"); })
-                    .catch(function (cat) { console.log("Error: ", cat); });
+                function executeCommandLine(commandLine) {
+                    exec(commandLine)
+                        .then(function (res) { console.log("Open"); })
+                        .catch(function (cat) { console.log("Error: ", cat); });
+                }
             });
         }
         catch (error) {

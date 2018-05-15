@@ -202,7 +202,7 @@ export function activate(context: vscode.ExtensionContext) {
                                 try {
 
                                     let newFileName = 'AppImages';
-                                    var tmpFilePath = tmpFolder + "/" + newFileName + ".zip";
+                                    var tmpFilePath = extractPath + "/" + newFileName + ".zip";
 
                                     http.get(apiUrl + resultZipUri.substring(1), function (response: any) {
                                         response.on('data', function (data: any) {
@@ -214,7 +214,9 @@ export function activate(context: vscode.ExtensionContext) {
                                             var zip = new AdmZip(tmpFilePath)
 
                                             zip.extractAllTo(extractPath, true)
+
                                             fs.unlink(tmpFilePath)
+                                            
                                             let jsonManifest = JSON.parse(fs.readFileSync(manifestFilePath, function (err: any, data: any) { if (err) { throw err; } }))
 
                                             let jsonIcons = JSON.parse(fs.readFileSync(extractPath + '/icons.json', function (err: any, data: any) { if (err) { throw err; } }))

@@ -156,7 +156,7 @@ function activate(context) {
                             const resultZipUri = JSON.parse(res.body).Uri;
                             try {
                                 let newFileName = 'AppImages';
-                                var tmpFilePath = tmpFolder + "/" + newFileName + ".zip";
+                                var tmpFilePath = extractPath + "/" + newFileName + ".zip";
                                 http.get(apiUrl + resultZipUri.substring(1), function (response) {
                                     response.on('data', function (data) {
                                         fs.appendFileSync(tmpFilePath, data);

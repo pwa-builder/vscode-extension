@@ -226,35 +226,63 @@ function activate(context) {
                     manifestJson.out = xmlPath;
                     manifestJson.dir = xmlPath;
                     vscode.window.showInformationMessage("Generating package. Please wait.");
-                    let cmdline = "pwabuilder -m " + manifestPath + " -p windows10 -d " + xmlPath;
-                    execute(cmdline)
-                        .then(function () {
-                        Filehound.create()
-                            .match('appxmanifest.xml')
-                            .paths(xmlPath)
-                            .find((err, htmlFiles) => {
-                            if (err)
-                                throw err;
-                            filesFound = htmlFiles;
-                        }).then(function () {
-                            fs.rename(filesFound[0], xmlPath + "\\appxmanifest.xml");
-                            makeAppx(manifestJson)
-                                .then(function (res) {
-                                vscode.window.showInformationMessage("Appx packaging complete.");
+                    if (os.platform() == 'win32') {
+                        let cmdline = "pwabuilder -m " + manifestPath + " -p windows10 -d " + xmlPath;
+                        execute(cmdline)
+                            .then(function () {
+                            Filehound.create()
+                                .match('appxmanifest.xml')
+                                .paths(xmlPath)
+                                .find((err, htmlFiles) => {
+                                if (err)
+                                    throw err;
+                                filesFound = htmlFiles;
+                            }).then(function () {
+                                fs.rename(filesFound[0], xmlPath + "\\appxmanifest.xml");
+                                makeAppx(manifestJson)
+                                    .then(function (res) {
+                                    vscode.window.showInformationMessage("Appx packaging complete.");
+                                })
+                                    .catch(function (err) {
+                                    vscode.window.showInformationMessage("Appx packaging error: " + err);
+                                });
                             })
                                 .catch(function (err) {
-                                vscode.window.showInformationMessage("Appx packaging error: " + err);
+                                vscode.window.showInformationMessage("Finding appxmanifest error: " + err);
                             });
                         })
-                            .catch(function (err) {
-                            vscode.window.showInformationMessage("Finding appxmanifest error: " + err);
+                            .catch(function (cat) {
+                            if (cat) {
+                                throw cat;
+                            }
                         });
-                    })
-                        .catch(function (cat) {
-                        if (cat) {
-                            throw cat;
-                        }
-                    });
+                    }
+                    else if (os.platform() == 'darwin') {
+                        let cmdline = "pwabuilder -m " + manifestPath + " -p mac -d " + xmlPath;
+                        execute(cmdline)
+                            .then(function () {
+                            console.log('appname', manifestJson.short_name);
+                            vscode.window.showInformationMessage("Just a little bit more...");
+                            Filehound.create()
+                                .glob(manifestJson.short_name)
+                                .paths(xmlPath)
+                                .ignoreHiddenDirectories()
+                                //.ignoreHiddenFiles()
+                                .find((err, htmlFiles) => {
+                                if (err)
+                                    throw err;
+                                console.log('filesfound', htmlFiles, 'error filesfound', err);
+                            })
+                                .catch(function (err) {
+                                vscode.window.showInformationMessage("Finding appxmanifest error: " + err);
+                            });
+                        })
+                            .catch(function (cat) {
+                            if (cat) {
+                                throw cat;
+                            }
+                        });
+                    }
                 });
             });
         }

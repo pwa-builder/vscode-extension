@@ -4,16 +4,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require("vscode");
 // Node Lib
-const fs = require("fs");
 const os = require("os");
-// Appx Packaging Lib
-const Filehound = require('filehound');
-const { makeAppx } = require('cloudappx-server');
-// Command Line
-const Q = require('q');
 const exec = require('child_process').exec;
-const execute = Q.nfbind(exec);
+const Filehound = require('filehound');
 const imageGenerator_1 = require("./modules/imageGenerator");
+const appPackaging_1 = require("./modules/appPackaging");
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 function activate(context) {
@@ -25,100 +20,7 @@ function activate(context) {
     // -------------------- END IMAGE GENERATOR -------------------------------------
     // ------------------------- APPX PACKAGE ------------------------------------
     let appxPackage = vscode.commands.registerCommand('extension.appxPackage', () => {
-        console.log("appxPackage");
-        try {
-            let xmlPath;
-            let filesFound;
-            let manifestPath;
-            let manifestJson;
-            // Manifest file picker
-            vscode.window.showOpenDialog({
-                canSelectFiles: true,
-                canSelectFolders: false,
-                canSelectMany: false,
-                openLabel: "Select manifest.json",
-            })
-                .then(function (result) {
-                manifestPath = result[0].fsPath;
-                manifestJson = JSON.parse(fs.readFileSync(result[0].fsPath, function (err, data) { if (err) {
-                    throw err;
-                } }));
-                // Output folder picker where the app will be generated
-                vscode.window.showOpenDialog({
-                    canSelectFiles: false,
-                    canSelectFolders: true,
-                    canSelectMany: false,
-                    openLabel: "Select destination folder",
-                })
-                    .then(function (result) {
-                    xmlPath = result[0].fsPath;
-                    // The data required by the MakeAppx is added manually
-                    manifestJson.out = xmlPath;
-                    manifestJson.dir = xmlPath;
-                    vscode.window.showInformationMessage("Generating package. Please wait.");
-                    if (os.platform() == 'win32') {
-                        let cmdline = "pwabuilder -m " + manifestPath + " -p windows10 -d " + xmlPath;
-                        execute(cmdline)
-                            .then(function () {
-                            Filehound.create()
-                                .match('appxmanifest.xml')
-                                .paths(xmlPath)
-                                .find((err, htmlFiles) => {
-                                if (err)
-                                    throw err;
-                                filesFound = htmlFiles;
-                            }).then(function () {
-                                fs.rename(filesFound[0], xmlPath + "\\appxmanifest.xml");
-                                makeAppx(manifestJson)
-                                    .then(function (res) {
-                                    vscode.window.showInformationMessage("Appx packaging complete.");
-                                })
-                                    .catch(function (err) {
-                                    vscode.window.showInformationMessage("Appx packaging error: " + err);
-                                });
-                            })
-                                .catch(function (err) {
-                                vscode.window.showInformationMessage("Finding appxmanifest error: " + err);
-                            });
-                        })
-                            .catch(function (cat) {
-                            if (cat) {
-                                throw cat;
-                            }
-                        });
-                    }
-                    else if (os.platform() == 'darwin') {
-                        let cmdline = "pwabuilder -m " + manifestPath + " -p mac -d " + xmlPath;
-                        execute(cmdline)
-                            .then(function () {
-                            console.log('appname', manifestJson.short_name);
-                            vscode.window.showInformationMessage("Just a little bit more...");
-                            Filehound.create()
-                                .glob(manifestJson.short_name)
-                                .paths(xmlPath)
-                                .ignoreHiddenDirectories()
-                                //.ignoreHiddenFiles()
-                                .find((err, htmlFiles) => {
-                                if (err)
-                                    throw err;
-                                console.log('filesfound', htmlFiles, 'error filesfound', err);
-                            })
-                                .catch(function (err) {
-                                vscode.window.showInformationMessage("Finding appxmanifest error: " + err);
-                            });
-                        })
-                            .catch(function (cat) {
-                            if (cat) {
-                                throw cat;
-                            }
-                        });
-                    }
-                });
-            });
-        }
-        catch (error) {
-            vscode.window.showInformationMessage(error);
-        }
+        appPackaging_1.appPackageProcess();
     });
     // -------------------- END APPX PACKAGE ----------------------------
     // --------------------- EXECUTE PROJECT ---------------------------

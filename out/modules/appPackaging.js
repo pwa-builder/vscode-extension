@@ -8,7 +8,7 @@ const Q = require('q');
 const exec = require('child_process').exec;
 const execute = Q.nfbind(exec);
 const os = require("os");
-function appPackage() {
+function appPackageProcess() {
     try {
         let xmlPath;
         let filesFound;
@@ -103,6 +103,6 @@ function appPackage() {
         vscode.window.showInformationMessage(error);
     }
 }
-exports.appPackage = appPackage;
+exports.appPackageProcess = appPackageProcess;
 ;
 //# sourceMappingURL=appPackaging.js.map

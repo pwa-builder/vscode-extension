@@ -272,44 +272,38 @@ function activate(context) {
                 canSelectFiles: true,
                 canSelectFolders: false,
                 canSelectMany: false,
-                openLabel: "Select manifest.xml",
+                openLabel: "Select APPX Package",
             })
                 .then(function (result) {
                 console.log("OS: ", os.platform());
                 console.log("file path: ", result[0].fsPath);
-                try {
-                    let commandLine = null;
-                    if (os.platform() != 'darwin') {
-                        console.log("Windows");
-                        commandLine = 'start ' + result[0].fsPath;
-                    }
-                    else {
-                        console.log("MacOS");
-                        let appFile = result[0].fsPath.split('/').pop();
-                        let path = result[0].fsPath.replace(appFile, '');
-                        let fileNoExt = appFile.split('.');
-                        Filehound.create()
-                            .glob(fileNoExt[0])
-                            .paths(path)
-                            .find((err, htmlFiles) => {
-                            if (err)
-                                throw err;
-                            commandLine = "open -F " + htmlFiles[0];
-                        })
-                            .catch(function (err) {
-                            vscode.window.showInformationMessage("Finding appxmanifest error: " + err);
-                        });
-                    }
-                    // hwa.registerApp(path.resolve(result[0].fsPath))
-                    // .catch(function(error:any){if(error){throw error}})
-                    vscode.window.showInformationMessage("Opening the proyect...");
-                    exec(commandLine)
-                        .then(function (res) { console.log("Open"); })
-                        .catch(function (cat) { console.log("Error: ", cat); });
+                let commandLine = null;
+                if (os.platform() == 'win32') {
+                    console.log("Windows");
+                    commandLine = 'start ' + result[0].fsPath;
                 }
-                catch (error) {
-                    vscode.window.showErrorMessage("The file must be XML");
+                else if (os.platform() == 'darwin') {
+                    console.log("MacOS");
+                    let appFile = result[0].fsPath.split('/').pop();
+                    let path = result[0].fsPath.replace(appFile, '');
+                    let fileNoExt = appFile.split('.');
+                    Filehound.create()
+                        .glob(fileNoExt[0])
+                        .paths(path)
+                        .find((err, htmlFiles) => {
+                        if (err)
+                            throw err;
+                        commandLine = "open -F " + htmlFiles[0];
+                    })
+                        .catch(function (err) {
+                        vscode.window.showInformationMessage("Finding appxmanifest error: " + err);
+                    });
                 }
+                vscode.window.showInformationMessage("Opening the proyect...");
+                console.log("CommandLine: ", commandLine);
+                exec(commandLine)
+                    .then(function (res) { console.log("Open"); })
+                    .catch(function (cat) { console.log("Error: ", cat); });
             });
         }
         catch (error) {

@@ -15,12 +15,6 @@
                 "kind": "build",
                 "isDefault": true
             }
-        },
-        {
-            "type": "npm",
-            "script": "test",
-            "path": "src/",
-            "problemMatcher": []
         }
     ]
 }

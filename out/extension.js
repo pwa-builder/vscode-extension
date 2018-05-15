@@ -8,6 +8,7 @@ const request = require("request");
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
+const os = require("os");
 // Image Generator Lib
 const AdmZip = require('adm-zip');
 const FormData = require("form-data");
@@ -18,15 +19,13 @@ const { makeAppx } = require('cloudappx-server');
 const Q = require('q');
 const exec = require('child_process').exec;
 const execute = Q.nfbind(exec);
-// Execute project
-const hwa = require('hwa');
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 function activate(context) {
     console.log('Congratulations, your extension "PWA-Builder" is now active!');
     // ------------  IMAGE GENERATOR ---------------------------
     let inputBox = vscode.commands.registerCommand('extension.imageGenerator', () => {
-        const apiUrl = 'http://appimagegenerator-pre.azurewebsites.net/'; // 'http://localhost:49080/'; 
+        const apiUrl = 'http://appimagegenerator-pre.azurewebsites.net/'; // 'http://localhost:49080/';
         let extractPath = '';
         let manifestFilePath = '';
         const tmpFolder = process.env.LOCALAPPDATA;
@@ -164,7 +163,7 @@ function activate(context) {
                                     });
                                     response.on('end', function () {
                                         var zip = new AdmZip(tmpFilePath);
-                                        zip.extractAllTo(extractPath);
+                                        zip.extractAllTo(extractPath, true);
                                         fs.unlink(tmpFilePath);
                                         let jsonManifest = JSON.parse(fs.readFileSync(manifestFilePath, function (err, data) { if (err) {
                                             throw err;
@@ -276,12 +275,37 @@ function activate(context) {
                 openLabel: "Select manifest.xml",
             })
                 .then(function (result) {
+                console.log("OS: ", os.platform());
+                console.log("file path: ", result[0].fsPath);
                 try {
-                    hwa.registerApp(path.resolve(result[0].fsPath))
-                        .catch(function (error) { if (error) {
-                        throw error;
-                    } });
+                    let commandLine = null;
+                    if (os.platform() != 'darwin') {
+                        console.log("Windows");
+                        commandLine = 'start ' + result[0].fsPath;
+                    }
+                    else {
+                        console.log("MacOS");
+                        let appFile = result[0].fsPath.split('/').pop();
+                        let path = result[0].fsPath.replace(appFile, '');
+                        let fileNoExt = appFile.split('.');
+                        Filehound.create()
+                            .glob(fileNoExt[0])
+                            .paths(path)
+                            .find((err, htmlFiles) => {
+                            if (err)
+                                throw err;
+                            commandLine = "open -F " + htmlFiles[0];
+                        })
+                            .catch(function (err) {
+                            vscode.window.showInformationMessage("Finding appxmanifest error: " + err);
+                        });
+                    }
+                    // hwa.registerApp(path.resolve(result[0].fsPath))
+                    // .catch(function(error:any){if(error){throw error}})
                     vscode.window.showInformationMessage("Opening the proyect...");
+                    exec(commandLine)
+                        .then(function (res) { console.log("Open"); })
+                        .catch(function (cat) { console.log("Error: ", cat); });
                 }
                 catch (error) {
                     vscode.window.showErrorMessage("The file must be XML");
@@ -294,6 +318,7 @@ function activate(context) {
         ;
     });
     // -------------------- END EXECUTE PROJECT -------------------------
+    context.subscriptions.push(inputBox, appxPackage, executeProject);
 }
 exports.activate = activate;
 // this method is called when your extension is deactivated

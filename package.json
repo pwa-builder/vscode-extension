@@ -4,6 +4,10 @@
     "description": "PWA-Builder-Extension for VSCode",
     "version": "0.0.1",
     "publisher": "pwa-builder",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/southworkscom/vscode-extension"
+    },
     "engines": {
         "vscode": "^1.22.0"
     },

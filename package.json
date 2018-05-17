@@ -1,7 +1,7 @@
 {
     "name": "PWA-Builder",
     "displayName": "PWA-Builder",
-    "description": "All tools of PWA-Builder in one extension. This one include the Image Generator for the Manifest, the project packaging and the project executor",
+    "description": "All PWA-Builder's tools in one extension. This one include the Image Generator for the Manifest, the project packaging and the project executor",
     "version": "0.0.1",
     "publisher": "pwa-builder",
     "repository": {
@@ -20,7 +20,7 @@
         "onCommand:extension.executeProject"
     ],
     "main": "./out/extension",
-    "icon": "./Readme-Files/logo128x128.PNG",
+    "icon": "Readme-Files/logo128x128.png",
     "contributes": {
         "commands": [
             {

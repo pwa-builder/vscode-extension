@@ -1,11 +1,14 @@
 ![Picture](Readme-Files/logo128x128.PNG)
 #  PWA-Builder
 
-This extension allow you create the necesaries images for manifest file, package the project as Appx file and execute an appx package.
+This extension allow you to use all the PWA-Builder site features locally. 
+You'll be able to:
+* Create all the needed images for the manifest file, 
+* Package your project and execute it.
 
 ## Prerequisites
 
-You will need the following things properly installed on your computer.
+You will need the following things properly installed on your computer:
 
 * [Git](http://git-scm.com/)
 * [Node.js](http://nodejs.org/) (with NPM)
@@ -27,8 +30,8 @@ You will need the following things properly installed on your computer.
 |  **&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Command&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;** | **Description** |
 | ----------------- | --------------- |
 | <a href="README.md#appxpackage">Appx Package</a>       | This command generates the Appx package |
-| <a href="README.md#exepackage">Execute Package</a>    | Execute a app from manifest.xml file |
-| <a href="README.md#imggen">Image Generator</a>    | Generates the images that you need for manifest.   |
+| <a href="README.md#exepackage">Execute Package</a>     | Execute a app from manifest.xml file |
+| <a href="README.md#imggen">Image Generator</a>         | Generates the images that you need for manifest.   |
 
 ## Commands Guide
 <div id="appxpackage"></div>

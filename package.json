@@ -1,0 +1,70 @@
+{
+    "name": "PWA-Builder",
+    "displayName": "PWA-Builder",
+    "description": "All PWA-Builder's tools in one extension. This one include the Image Generator for the Manifest, the project packaging and the project executor",
+    "version": "0.0.1",
+    "publisher": "pwa-builder",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/southworkscom/vscode-extension"
+    },
+    "engines": {
+        "vscode": "^1.22.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onCommand:extension.imageGenerator",
+        "onCommand:extension.appxPackage",
+        "onCommand:extension.executeProject"
+    ],
+    "main": "./out/extension",
+    "icon": "Readme-Files/logo128x128.png",
+    "contributes": {
+        "commands": [
+            {
+                "command": "extension.imageGenerator",
+                "title": "App Image Generator"
+            },
+            {
+                "command": "extension.appxPackage",
+                "title": "Appx Packaging"
+            },
+            {
+                "command": "extension.executeProject",
+                "title": "Execute Project"
+            }
+        ],
+        "snippets": [
+            {
+                "language": "json",
+                "path": "./src/snippets/json.json"
+            },
+            {
+                "language": "javascript",
+                "path": "./src/snippets/javascript.json"
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install",
+        "test": "npm run compile && node ./node_modules/vscode/bin/test"
+    },
+    "devDependencies": {
+        "typescript": "^2.6.1",
+        "vscode": "^1.1.6",
+        "@types/node": "^7.0.43",
+        "@types/mocha": "^2.2.42"
+    },
+    "dependencies": {
+        "adm-zip": "^0.4.7",
+        "cloudappx-server": "0.0.6",
+        "filehound": "^1.16.3",
+        "form-data": "^2.3.2",
+        "request": "^2.85.0"
+    }
+}

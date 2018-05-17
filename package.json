@@ -1,7 +1,7 @@
 {
-    "name": "PWA-Builder-Extension",
-    "displayName": "PWA-Builder-Extension",
-    "description": "PWA-Builder-Extension for VSCode",
+    "name": "PWA-Builder",
+    "displayName": "PWA-Builder",
+    "description": "All tools of PWA-Builder in one extension. This one include the Image Generator for the Manifest, the project packaging and the project executor",
     "version": "0.0.1",
     "publisher": "pwa-builder",
     "repository": {
@@ -20,6 +20,7 @@
         "onCommand:extension.executeProject"
     ],
     "main": "./out/extension",
+    "icon": "./Readme-Files/logo128x128.PNG",
     "contributes": {
         "commands": [
             {
@@ -38,11 +39,11 @@
         "snippets": [
             {
                 "language": "json",
-                "path": "./source/snippets/json.json"
+                "path": "./src/snippets/json.json"
             },
             {
                 "language": "javascript",
-                "path": "./source/snippets/javascript.json"
+                "path": "./src/snippets/javascript.json"
             }
         ]
     },

@@ -12,7 +12,6 @@ You will need the following things properly installed on your computer.
 ## Dependecies
 
 * [CloudAppx-Server](https://www.npmjs.com/package/cloudappx-server)
-* [HWA](https://www.npmjs.com/package/hwa)
 * [Filehound](https://www.npmjs.com/package/filehound)
 * [PWA-Builder](https://www.npmjs.com/package/pwabuilder-windows10) (Windows 10)
 

@@ -17,15 +17,18 @@ function executeProjectProcess() {
 
             })
                 .then(function (result: any) {
+                    console.log("result ", result[0].fsPath)
+                    let file = ((result[0].fsPath).split('\\').pop()).split('.');
 
                     let commandLine: any = null;
-                    if (os.platform() == 'win32') {
+                    if (os.platform() == 'win32' && file[1].toLowerCase() == 'appx') {
 
                         commandLine = 'start ' + result[0].fsPath
+
                         vscode.window.showInformationMessage("Opening the proyect...")
                         exec(commandLine);
 
-                    } else if (os.platform() == 'darwin') {
+                    } else if (os.platform() == 'darwin' && file[1].toLowerCase() == 'app') {
 
                         let appFile = result[0].fsPath.split('/').pop()
                         let path = result[0].fsPath.replace(appFile, '')
@@ -45,12 +48,14 @@ function executeProjectProcess() {
 
                             })
                             .catch(function (err: any) {
-                                vscode.window.showInformationMessage("Finding appxmanifest error: " + err)
+                                vscode.window.showInformationMessage("Error finding the app file: " + err)
                             });
 
 
+                    }else{
+                        vscode.window.showErrorMessage("The format is invalid. Please check.")
                     }
-                    vscode.window.showInformationMessage("Opening the proyect...")
+                    
 
 
 

@@ -1,0 +1,57 @@
+{
+    "Simple Manifest": {
+
+      "prefix": "pwa-simple-manifest",
+      "description": "Generate a simple manifest.json template.",
+      "body": [
+        "{",
+            "\"\\$schema\": \"http://json.schemastore.org/web-manifest\",",
+        "  \"name\": \"${1:Name}\",",
+        "  \"description\": \"${3:Description}\",",
+        "  \"icons\": [",
+        "    {",
+        "      \"src\": \"${4:img.jpg}\",",
+        "      \"sizes\": \"96x96\",",
+        "      \"type\": \"image/jpg\"",
+        "    }",
+        "  ]",
+        "}"
+      ]
+    },
+    "Typical Manifest":{
+        
+        "prefix": "pwa-typical-manifest",
+        "description": "Generate a typical manifest.json template.",
+        "body": [
+            "{",
+                "\"\\$schema\": \"http://json.schemastore.org/web-manifest\",",
+            "    \"lang\": \"en\",",
+            "    \"dir\": \"ltr\",",
+            "    \"name\": \"${1:Name}\",",
+            "    \"description\": \"${2:Description}\",",
+            "    \"short_name\": \"${3:Short_Name}\",",
+            "    \"icons\": [{",
+            "      \"src\": \"${4:img_path.format}\",",
+            "      \"sizes\": \"64x64\",",
+            "      \"type\": \"image/webp\"",
+            "    }],",
+            "    \"scope\": \"/\",",
+            "    \"start_url\": \"${5:Start_Url}\",",
+            "    \"display\": \"${6|fullscreen,standalone,minimal-ui,browser|}\",",
+            "    \"orientation\": \"${7|any,natural,landscape,portrait,portrait-primary,portrait-secondary,landscape-primary,landscape-secondary|}\",",
+            "    \"theme_color\": \"${8:theme_color}\",",
+            "    \"background_color\": \"${9:background_color}\",",
+            "    \"serviceworker\": {",
+            "      \"src\": \"${10:sw.js}\",",
+            "      \"scope\": \"/\",",
+            "      \"update_via_cache\": \"none\"",
+            "    },",
+            "    \"screenshots\": [{",
+            "      \"src\": \"${11:screenshots/img.jpg}\",",
+            "      \"sizes\": \"640x480\",",
+            "      \"type\": \"image/jpeg\"",
+            "    }]",
+            "  }"
+        ]
+    }
+}

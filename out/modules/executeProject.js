@@ -15,13 +15,15 @@ function executeProjectProcess() {
             openLabel: "Select APPX Package",
         })
             .then(function (result) {
+            //console.log("result ", result[0].fsPath)
+            let file = ((result[0].fsPath).split('\\').pop()).split('.');
             let commandLine = null;
-            if (os.platform() == 'win32') {
+            if (os.platform() == 'win32' && file[1].toLowerCase() == 'appx') {
                 commandLine = 'start ' + result[0].fsPath;
                 vscode.window.showInformationMessage("Opening the proyect...");
                 exec(commandLine);
             }
-            else if (os.platform() == 'darwin') {
+            else if (os.platform() == 'darwin' && file[1].toLowerCase() == 'app') {
                 let appFile = result[0].fsPath.split('/').pop();
                 let path = result[0].fsPath.replace(appFile, '');
                 let fileNoExt = appFile.split('.');
@@ -36,10 +38,12 @@ function executeProjectProcess() {
                     exec(commandLine);
                 })
                     .catch(function (err) {
-                    vscode.window.showInformationMessage("Finding appxmanifest error: " + err);
+                    vscode.window.showInformationMessage("Error finding the app file: " + err);
                 });
             }
-            vscode.window.showInformationMessage("Opening the proyect...");
+            else {
+                vscode.window.showErrorMessage("The format is invalid. Please check.");
+            }
         });
     }
     catch (error) {

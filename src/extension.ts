@@ -3,7 +3,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 
-import {imageGeneratorProcess} from './modules/imageGenerator';
+import {imageGeneratorProcess} from './modules/imageGenerator'
 import {appPackageProcess} from './modules/appPackaging';
 import {executeProjectProcess} from './modules/executeProject';
 

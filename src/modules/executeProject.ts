@@ -17,9 +17,9 @@ function executeProjectProcess() {
 
             })
                 .then(function (result: any) {
-                    console.log("result ", result[0].fsPath)
+                    //console.log("result ", result[0].fsPath)
                     let file = ((result[0].fsPath).split('\\').pop()).split('.');
-
+                    
                     let commandLine: any = null;
                     if (os.platform() == 'win32' && file[1].toLowerCase() == 'appx') {
 

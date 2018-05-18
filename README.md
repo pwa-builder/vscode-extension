@@ -1,5 +1,5 @@
-![Picture](Readme-Files/logo128x128.PNG)
-#  PWA-Builder
+![Picture](Readme-Files/logo128x128.PNG) 
+## PWA-Builder
 
 This extension allow you create the necesaries images for manifest file, package the project as Appx file and execute an appx package.
 

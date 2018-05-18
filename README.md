@@ -1,4 +1,3 @@
-![Picture](Readme-Files/logo128x128.PNG) 
 ## PWA-Builder
 
 This extension allow you create the necesaries images for manifest file, package the project as Appx file and execute an appx package.
@@ -59,7 +58,7 @@ The directory and package names will be the same of the manifest's short name pr
 
 ### Execute Project
 
-Select the manifest file that you want execute (It must be a XML file). <br>
+Select the application file that you want execute (It must be an APPX file on Windows and APP on Mac). <br>
 ![Picture](Readme-Files/ExecuteProject-Images/ExecuteProject-Step1.PNG)
 
 <div id="imggen"></div>

@@ -131,6 +131,7 @@ function imageGeneratorProcess() {
                     });
                 };
                 let sendToApi = function () {
+                    vscode.window.showInformationMessage('Processing the image. Please wait.');
                     request.post(apiUrl + 'api/image/', {
                         body: formData,
                         headers: formData.getHeaders()

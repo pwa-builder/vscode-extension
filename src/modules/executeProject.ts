@@ -3,6 +3,7 @@ import * as vscode from 'vscode';
 const os = require("os");
 const exec = require('child_process').exec;
 const Filehound = require('filehound');
+const hwa = require('hwa');
 
 function executeProjectProcess() {
     console.log("executeProject")
@@ -13,7 +14,7 @@ function executeProjectProcess() {
                 canSelectFiles: true,
                 canSelectFolders: false,
                 canSelectMany: false,
-                openLabel: "Select APPX Package",
+                openLabel: "Select file",
 
             })
                 .then(function (result: any) {
@@ -21,12 +22,9 @@ function executeProjectProcess() {
                     let file = ((result[0].fsPath).split('\\').pop()).split('.');
                     
                     let commandLine: any = null;
-                    if (os.platform() == 'win32' && file[1].toLowerCase() == 'appx') {
-
-                        commandLine = 'start ' + result[0].fsPath
-
+                    if (os.platform() == 'win32' && file[1].toLowerCase() == 'xml') {
                         vscode.window.showInformationMessage("Opening the proyect...")
-                        exec(commandLine);
+                        hwa.registerApp(result[0].fsPath)
 
                     } else if (os.platform() == 'darwin' && file[1].toLowerCase() == 'app') {
 

@@ -9,6 +9,7 @@ const exec = require('child_process').exec;
 const execute = Q.nfbind(exec);
 const os = require("os");
 
+
 function appPackageProcess() {
 
     let xmlPath: any;
@@ -69,12 +70,7 @@ function appPackageProcess() {
             } catch (error) {
                 vscode.window.showInformationMessage(error)
             }
-
-
-
             // Sub-functions
-
-
             function execCmdLineWin32(cmdline:any){
                 execute(cmdline)
                 .then(function () {
@@ -87,11 +83,10 @@ function appPackageProcess() {
                             }).then(
                                 function () {
                                     fs.rename(filesFound[0], `${xmlPath}\\appxmanifest.xml`)
-
+                                    manifestJson.name = manifestJson.name.split(' ').join('-');
                                     makeAppx(manifestJson)
                                     .then(function (res: any) {
                                         vscode.window.showInformationMessage("Appx packaging complete.")
-
                                     })
                                     .catch(function (err: any) {
                                         vscode.window.showInformationMessage(`Appx packaging error: ${err}`)

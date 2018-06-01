@@ -70,6 +70,7 @@ function appPackageProcess() {
                 filesFound = files;
             }).then(function () {
                 fs.rename(filesFound[0], `${xmlPath}\\appxmanifest.xml`);
+                manifestJson.name = manifestJson.name.split(' ').join('-');
                 makeAppx(manifestJson)
                     .then(function (res) {
                     vscode.window.showInformationMessage("Appx packaging complete.");

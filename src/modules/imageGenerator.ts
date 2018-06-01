@@ -26,55 +26,38 @@ function imageGeneratorProcess() {
             .then(function (result: any) {
 
                 let imgUrl = result[0].fsPath;
-
-
                 if (imgUrl != '') {
-
                     try {
-
                         const formData = new FormData()
-
                         formData.append('fileName', fs.createReadStream(imgUrl));
-
                         // Platforms input
-
                         vscode.window.showQuickPick(["iOS", "Windows", "Windows10", "Android", "Chrome", "Firefox"], { canPickMany: true })
                             .then(function (platforms: any) {
                                 if (platforms != '') {
-
                                     for (let i = 0; i < platforms.length; i++) {
                                         formData.append('platform', (platforms[i]).toLowerCase());
                                     }
-
                                     inputPadding();
                                 } else {
                                     vscode.window.showErrorMessage("No platform was chosen.")
                                 }
                             });
-
-
-
                         // Padding input
                         let inputPadding = function () {
-
                             vscode.window.showInputBox({ prompt: '0 is no padding, 1 is 100% of the source image. 0.3 is a typical value for most icons', placeHolder: '0.3' })
                                 .then(function (resultPadding) {
                                     let predetPadding = '0.3';
-
                                     if (resultPadding != undefined && resultPadding != null && resultPadding != '') {
                                         if (parseFloat(resultPadding) < 0 || parseFloat(resultPadding) > 0) {
                                             vscode.window.showErrorMessage("Incorrect padding value. It must be between 0 and 1.")
                                         } else {
                                             formData.append('padding', resultPadding);
                                             inputColorOption();
-
                                         }
                                     } else {
                                         formData.append('padding', predetPadding);
                                         inputColorOption();
-
                                     }
-
                                 })
                         };
                         // Image Background
@@ -84,41 +67,31 @@ function imageGeneratorProcess() {
                                     let color = '';
                                     let colorOption = '0';
                                     let colorChanged = '0';
-
                                     if (result == "Custom Color") {
-
                                         vscode.window.showInputBox({ prompt: 'Insert the hexadecimal code. Ex: #123456' })
                                             .then(function (resultColor: any) {
-
                                                 if (resultColor.substring(0, 1) == '#' && resultColor.length == 7) {
-
                                                     color = resultColor;
                                                     colorOption = '1';
                                                     colorChanged = '1';
-
                                                     formData.append('colorOption', colorOption);
                                                     formData.append('colorChanged', colorChanged);
                                                     formData.append('color', color);
-
                                                     setExtractPath();
                                                 } else {
                                                     vscode.window.showErrorMessage("Invalid value, it must be like #123456.")
                                                 }
-
                                             })
                                     } else {
-
                                         formData.append('colorOption', colorOption);
                                         formData.append('colorChanged', colorChanged);
                                         formData.append('color', color);
                                         setExtractPath();
-
                                     }
                                 })
                         };
 
                         // Select of extraction path
-
                         let setExtractPath = function () {
                             vscode.window.showOpenDialog({
                                 canSelectFiles: false,
@@ -128,7 +101,6 @@ function imageGeneratorProcess() {
 
                             })
                                 .then(function (result: any) {
-
                                     extractPath = result[0].path.substring(1);
                                     let folderName: any = extractPath.split('/').pop();
                                     if (folderName.toLowerCase() == 'assets') {
@@ -136,8 +108,6 @@ function imageGeneratorProcess() {
                                     } else {
                                         vscode.window.showErrorMessage("Wrong folder name. It must be the Assets folder.")
                                     }
-
-
                                 })
                         }
                         // Select of manifest path
@@ -161,10 +131,8 @@ function imageGeneratorProcess() {
                                     }
                                 })
                         }
-
-
                         let sendToApi = function () {
-
+                            vscode.window.showInformationMessage('Processing the image. Please wait.')
                             request.post(apiUrl + 'api/image/', {
                                 body: formData,
                                 headers: formData.getHeaders()

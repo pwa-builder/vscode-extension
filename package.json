@@ -1,5 +1,5 @@
 {
-    "name": "PWA-Builder BETA",
+    "name": "PWA-Builder-BETA",
     "displayName": "PWA-Builder BETA",
     "description": "(BETA) All PWA-Builder's tools in one extension. This one include the Image Generator for the Manifest, the project packaging and the project executor",
     "version": "0.0.1-BETA",
@@ -20,7 +20,7 @@
         "onCommand:extension.executeProject"
     ],
     "main": "./out/extension",
-    "icon": "Readme-Files/logo128x128.png",
+    "icon": "https://github.com/southworkscom/vscode-extension/blob/master/Readme-Files/logo128x128.png",
     "contributes": {
         "commands": [
             {

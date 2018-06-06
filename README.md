@@ -1,4 +1,4 @@
-## PWA-Builder
+## PWA-Builder BETA
 <hr/>
 
 This extension allow you create the necesaries images for manifest file, package the project as Appx file and execute an appx package from a directory.

@@ -92,7 +92,7 @@ This snippets run in JSON files only. There are two options:
 * Simple Manifest
 * Typical Manifest
 
-![Picture](Readme-Files/Snippets-Images/Manifest/SnippetManifest.gif)
+![Picture](Readme-Files/Snippets-images/Manifest/SnippetManifest.gif)
 
 ### Service Worker
 
@@ -105,12 +105,12 @@ This group contains:
 
 #### Service worker code
 
-![Picture](Readme-Files/Snippets-Images/ServiceWorker/SnippetSWCode.gif)
+![Picture](Readme-Files/Snippets-images/ServiceWorker/SnippetSWCode.gif)
 
 
 #### Code for website
 
-![Picture](Readme-Files/Snippets-Images/ServiceWorker/SnippetSWWeb.gif)
+![Picture](Readme-Files/Snippets-images/ServiceWorker/SnippetSWWeb.gif)
 
 
 ## Built With

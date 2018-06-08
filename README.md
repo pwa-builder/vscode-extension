@@ -1,9 +1,8 @@
-# PWA-Builder BETA
-<hr/>
+# __PWA-Builder BETA__
 
 This extension allow you create the necesaries images for manifest file, package the project as Appx file and execute an appx package from a directory.
 
-## Table of Contents
+## __Table of Contents__
 
 * Prerequisites
 * Installation
@@ -12,6 +11,9 @@ This extension allow you create the necesaries images for manifest file, package
   * Appx Packaging
   * Execute Project
   * Image Generator
+  * Snippets
+    * Manifest
+    * Service Worker
   
 
 ## Prerequisites
@@ -27,7 +29,7 @@ You will need the following things properly installed on your computer.
 * change into the new directory
 * `npm install`
 
-## Table of Commands
+## __Table of Commands__
 
 |  **&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Command&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;** | **Description** |
 | ----------------- | --------------- |
@@ -36,7 +38,7 @@ You will need the following things properly installed on your computer.
 | <a href="README.md#imggen">Image Generator</a>    | Generates the images that you need for manifest.   |
 
 
-## How to use?
+## __How to use?__
 
 <div id="appxpackage"></div>
 
@@ -79,6 +81,37 @@ Select the application file that you want execute (It must be the appxmanifest.x
 * Set the __manifest.json__ file path 
 
 ![Picture](Readme-Files/ImageGenerator-Images/ImageGeneratorProcess.gif)
+
+## Snippets
+
+The snippets will help you saving time with the creation of the manifest and the service worker.
+
+### Manifest
+
+This snippets run in JSON files only. There are two options:
+* Simple Manifest
+* Typical Manifest
+
+![Picture](Readme-Files/Snippets-Images/Manifest/SnippetManifest.gif)
+
+### Service Worker
+
+This group contains:
+
+* Offline page
+* Offline copy of pages 
+* Offline copy with Backup offline page 
+* Cache-first network
+
+#### Service worker code
+
+![Picture](Readme-Files/Snippets-Images/ServiceWorker/SnippetSWCode.gif)
+
+
+#### Code for website
+
+![Picture](Readme-Files/Snippets-Images/ServiceWorker/SnippetSWWeb.gif)
+
 
 ## Built With
 
